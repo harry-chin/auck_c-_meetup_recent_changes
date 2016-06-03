@@ -1,0 +1,205 @@
+% Created 2016-06-02 Thu 16:16
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{booktabs}
+\usetheme{default}
+\usecolortheme{}
+\usefonttheme{}
+\useinnertheme{}
+\useoutertheme{}
+\date{Auckland C++ Meetup\\14 June 2016}
+\title{Recent Changes in C++}
+\author{Toby Allsopp\\\texttt{toby@mi6.gen.nz}}
+
+\hypersetup{
+ pdfauthor={},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode 8.3.4)}, 
+ pdflang={English}}
+\begin{document}
+\begin{frame}
+ \titlepage{} 
+\end{frame}
+\label{sec:orgheadline31}
+\begin{frame}[label={sec:orgheadline1}]{Overview}
+%\setcounter{tocdepth}{9}
+  \tableofcontents
+\end{frame}
+\section{C++11}
+
+\subsection{Type Inference}
+\begin{frame}
+\tableofcontents
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\mintinline{c++}~auto~}
+  Instead of
+\begin{minted}[]{c++}
+map<string, string>::iterator it = m.find("foo");
+\end{minted}
+  you can write
+\begin{minted}[]{c++}
+auto it = m.find("foo");
+\end{minted}
+  \begin{itemize}
+  \item No more \mintinline{c++}~typedef std::map<string, string> FooBarMap~
+  \item Doesn't work for member variables, function parameters (but wait for generic lambdas)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\mintinline{c++}{using} type aliases}
+  \begin{itemize}
+  \item More readable alternative to \mintinline{c++}~typedef~
+    \begin{tabular}[h]{ll}
+      \mintinline{c++}{typedef} & \mintinline{c++}{using} \\
+      \midrule
+      \mintinline{c++}{typedef map<K,V> m} & \mintinline{c++}{using m = map<K,V>} \\
+      \mintinline{c++}{typedef void (*f)(int)} & \mintinline{c++}{using f = void (*)(int)} \\
+    \end{tabular}
+  \item Can be templated
+\begin{minted}{c++}
+template<typename T>
+using myvector = vector<T>;
+\end{minted}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\mintinline{c++}~decltype~}
+\end{frame}
+
+\subsection{Lambda expressions}
+
+\begin{frame}[fragile,label={sec:orgheadline4}]{Lambdas}
+  Given
+\begin{minted}[]{c++}
+vector<int> v = { 1, 1, 2, 3 };
+int limit = 1;
+\end{minted}
+\begin{minted}[]{c++}
+auto it = find_if(v.begin(), v.end(),
+  [&limit](int x) -> bool { return x > limit; });
+assert(it != v.end() && *it == 2);
+\end{minted}
+  is equivalent to
+\begin{minted}[]{c++}
+struct pred {
+  int &limit;
+  Pred(int &limit) : limit(limit) {}
+  bool operator()(int x) const { return x > limit; }
+};
+auto it = find_if(v.begin(), v.end(), pred(limit));
+assert(it != v.end() && *it == 2);
+\end{minted}
+\end{frame}
+\begin{frame}[fragile]{Lambdas (capturing)}
+  \begin{tabular}[h]{ll}
+    Nothing                 & \mintinline{c++}{[]}             \\
+    Everything by reference & \mintinline{c++}~[&]~            \\
+    Everything by value     & \mintinline{c++}~[=]~            \\
+    Something by reference  & \mintinline{c++}{[&something]}   \\
+    One of each             & \mintinline{c++}{[&byref,byval]} \\
+  \end{tabular}
+\end{frame}
+
+\subsection{Move semantics}
+\begin{frame}[label={sec:orgheadline6}]{move semantics}
+\end{frame}
+\begin{frame}
+  \frametitle{rvalue reference}
+\end{frame}
+\begin{frame}[label={sec:orgheadline7}]{constexpr}
+\end{frame}
+\begin{frame}[label={sec:orgheadline8}]{initializer lists}
+\end{frame}
+\begin{frame}[label={sec:orgheadline9}]{uniform initialization}
+\end{frame}
+\begin{frame}[label={sec:orgheadline10}]{new function syntax}
+\end{frame}
+\begin{frame}[label={sec:orgheadline11}]{override and final}
+\end{frame}
+\begin{frame}[label={sec:orgheadline12}]{nullptr}
+\end{frame}
+\begin{frame}[label={sec:orgheadline13}]{enum class}
+\end{frame}
+\begin{frame}[label={sec:orgheadline14}]{Angle brackets >>}
+\end{frame}
+\begin{frame}[label={sec:orgheadline16}]{Variadic templates}
+\end{frame}
+\begin{frame}[label={sec:orgheadline17}]{String literals}
+\end{frame}
+\begin{frame}[label={sec:orgheadline18}]{User-defined literals}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline19}]{Threading}
+ \begin{block}{\texttt{std::thread}}
+\end{block}
+\begin{block}{\texttt{std::mutex}}
+\end{block}
+\begin{block}{\texttt{std::future}}
+\end{block}
+\begin{block}{\texttt{std::async}}
+\end{block}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline20}]{\texttt{thread\_local}}
+\end{frame}
+\begin{frame}[label={sec:orgheadline21}]{Defaulted and deleted special members}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline22}]{\texttt{long long int}}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline23}]{\texttt{static\_assert}}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline24}]{\texttt{alignof} and \texttt{alignas}}
+\end{frame}
+\begin{frame}[label={sec:orgheadline25}]{Attributes}
+\end{frame}
+\begin{frame}[label={sec:orgheadline26}]{Tuples}
+\end{frame}
+\begin{frame}[label={sec:orgheadline27}]{Hash tables}
+\end{frame}
+\begin{frame}[label={sec:orgheadline28}]{Regular expressions}
+\end{frame}
+\begin{frame}[label={sec:orgheadline29}]{Smart pointers}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline30}]{\texttt{std::function}}
+\end{frame}
+
+\section{C++14}
+\label{sec:orgheadline40}
+\begin{frame}[label={sec:orgheadline32}]{Function return type deduction}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline33}]{Improved \texttt{constexpr}}
+\end{frame}
+\begin{frame}[label={sec:orgheadline34}]{Variable templates}
+\end{frame}
+\begin{frame}[label={sec:orgheadline35}]{Binary literals}
+\end{frame}
+\begin{frame}[label={sec:orgheadline36}]{Generic lambdas}
+\end{frame}
+\begin{frame}[label={sec:orgheadline37}]{Lambda capture expressions}
+\end{frame}
+\begin{frame}[label={sec:orgheadline38}]{More literals}
+\end{frame}
+\begin{frame}[fragile,label={sec:orgheadline39}]{\texttt{std::make\_unique}}
+\end{frame}
+
+\section{C++17}
+\label{sec:orgheadline41}
+\end{document}
